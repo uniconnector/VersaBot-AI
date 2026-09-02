@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文达AI 论文助手 - 智能论文写作平台</title>
+    
+    <!-- CKEditor 5 -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0d5c63;
+            --primary-light: #148a8a;
+            --primary-dark: #0a4a50;
+            --primary-bg: #e8f4f5;
+            --secondary: #1aaba8;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-muted: #95a5a6;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #f0f7f8;
+            --border-color: #e0e6e7;
+            --shadow-sm: 0 1px 3px rgba(13,92,99,0.08);
+            --shadow-md: 0 4px 12px rgba(13,92,99,0.12);
+            --shadow-lg: 0 8px 24px rgba(13,92,99,0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== Top Navigation ===== */
+        .top-nav {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu a {
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary);
+            background: var(--primary-bg);
+        }
+
+        .nav-menu a.active {
+            color: var(--primary);
+            font-weight: 600;
+            background: var(--primary-bg);
+        }
+
+        .badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .nav-btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid var(--border-color);
+        }
+
+        /* ===== Main Layout ===== */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 64px);
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* ===== Sidebar ===== */
+        .sidebar {
+            width: 320px;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-color);
+            padding: 32px 24px;
+            position: sticky;
+            top: 64px;
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+            transition: var(--transition);
+        }
+
+        .sidebar-header {
+            margin-bottom: 32px;
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-secondary);
+            border-radius: 3px;
+            margin-top: 16px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+            width: 33%;
+        }
+
+        /* Step Cards */
+        .step-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: var(--border-color);
+            transition: var(--transition);
+        }
+
+        .step-card:hover {
+            border-color: var(--primary-light);
+            transform: translateX(4px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .step-card.active {
+            background: var(--primary-bg);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .step-card.active::before {
+            background: var(--primary);
+        }
+
+        .step-card.completed {
+            background: #e8f8f5;
+            border-color: var(--success);
+        }
+
+        .step-card.completed::before {
+            background: var(--success);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .step-card.active .step-number {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .step-card.completed .step-number {
+            background: var(--success);
+            color: white;
+        }
+
+        .step-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .step-card.active .step-title {
+            color: var(--primary);
+        }
+
+        .step-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            padding-left: 44px;
+        }
+
+        .step-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            padding: 4px 8px;
+            background: var(--bg-primary);
+            border-radius: 6px;
+            margin-top: 8px;
+            margin-left: 44px;
+            color: var(--text-secondary);
+        }
+
+        .step-card.completed .step-status {
+            color: var(--success);
+            background: #d5f5e3;
+        }
+
+        /* Sidebar Footer */
+        .sidebar-footer {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .quick-btn {
+            padding: 10px 16px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-align: left;
+        }
+
+        .quick-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-bg);
+        }
+
+        /* ===== Main Content ===== */
+        .main-content {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+        }
+
+        .content-header {
+            margin-bottom: 32px;
+        }
+
+        .content-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .content-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            padding: 24px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Form Elements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-label .required {
+            color: var(--danger);
+        }
+
+        .form-input,
+        .form-select {
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            transition: var(--transition);
+            background: var(--bg-primary);
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13,92,99,0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Radio Group */
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .radio-item:hover {
+            border-color: var(--primary-light);
+        }
+
+        .radio-item.active {
+            background: var(--primary-bg);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .radio-item input[type="radio"] {
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Type Grid */
+        .type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .type-item {
+            padding: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-primary);
+        }
+
+        .type-item:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .type-item.active {
+            border-color: var(--primary);
+            background: var(--primary-bg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .type-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .type-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .type-item.active .type-name {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-large {
+            padding: 16px 32px;
+            font-size: 16px;
+        }
+
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* CKEditor Customization */
+        .editor-wrapper {
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .editor-wrapper.ck.ck-editor__main {
+            border: none;
+        }
+
+        .ck.ck-editor {
+            border: none !important;
+        }
+
+        .ck.ck-toolbar {
+            background: var(--bg-secondary) !important;
+            border-bottom: 1px solid var(--border-color) !important;
+        }
+
+        .ck.ck-toolbar .ck.ck-button {
+            color: var(--primary) !important;
+        }
+
+        .ck.ck-toolbar .ck.ck-button:hover {
+            background: var(--primary-bg) !important;
+        }
+
+        .ck.ck-toolbar .ck.ck-button.ck-on {
+            background: var(--primary) !important;
+            color: white !important;
+        }
+
+        .ck.ck-content {
+            min-height: 600px;
+            padding: 24px !important;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        /* Editor Header */
+        .editor-header {
+            padding: 20px 24px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .editor-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .editor-meta {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Editor Footer */
+        .editor-footer {
+            padding: 16px 24px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .editor-stats {
+            display: flex;
+            gap: 24px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Action Bar */
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding: 20px 24px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Article Card */
+        .article-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 24px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .article-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .article-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .article-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .article-tag {
+            font-size: 12px;
+            padding: 4px 10px;
+            background: var(--primary-bg);
+            color: var(--primary);
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .article-meta {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .status-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+        }
+
+        .status-label {
+            font-size: 14px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .status-badge.pending {
+            background: #fef3e2;
+            color: var(--warning);
+        }
+
+        .status-badge.completed {
+            background: #d5f5e3;
+            color: var(--success);
+        }
+
+        /* Promo Banners */
+        .promo-section {
+            margin-top: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .promo-banner {
+            padding: 14px 24px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .promo-banner:hover {
+            transform: translateX(4px);
+        }
+
+        .promo-banner.orange {
+            background: #fff5f0;
+            border: 1px solid #fde0d0;
+            color: #e67e22;
+        }
+
+        .promo-banner.yellow {
+            background: #fffef5;
+            border: 1px solid #f5f0d0;
+            color: #d4a017;
+        }
+
+        .promo-banner.blue {
+            background: #f0f8ff;
+            border: 1px solid #d0e8f5;
+            color: #2980b9;
+        }
+
+        .promo-banner.teal {
+            background: var(--primary-bg);
+            border: 1px solid #c0e0e2;
+            color: var(--primary);
+        }
+
+        /* Mobile Toggle */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            z-index: 999;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                position: fixed;
+                left: -320px;
+                z-index: 998;
+                box-shadow: var(--shadow-lg);
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .mobile-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .type-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .content-title {
+                font-size: 22px;
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .editor-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .action-bar {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 997;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        /* Floating Toolbar */
+        .floating-toolbar {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            z-index: 100;
+        }
+
+        .float-btn {
+            width: 52px;
+            padding: 12px 0;
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            font-size: 11px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .float-btn:first-child {
+            border-radius: var(--radius-sm) 0 0 0;
+        }
+
+        .float-btn:last-child {
+            border-radius: 0 0 0 var(--radius-sm);
+        }
+
+        .float-btn:hover {
+            width: 72px;
+            background: var(--primary-dark);
+        }
+
+        .float-btn i {
+            font-size: 18px;
+        }
+
+        @media (max-width: 1024px) {
+            .floating-toolbar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="#" class="logo">
+                <div class="logo-icon">文</div>
+                文达AI
+            </a>
+            <div class="nav-menu">
+                <a href="#">降AIGC</a>
+                <a href="#">文章降重</a>
+                <a href="#" class="active">论文助手 <span class="badge" style="background:var(--primary)">深度</span></a>
+                <a href="#">答辩PPT</a>
+                <a href="#">英文专区</a>
+            </div>
+        </div>
+        <div class="nav-right">
+            <button class="nav-btn nav-btn-primary">
+                <i class="fas fa-gift"></i>
+                毕业大礼包
+            </button>
+            <button class="nav-btn nav-btn-primary">
+                <i class="fas fa-search"></i>
+                查询订单
+            </button>
+            <div class="avatar">U</div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">论文写作流程</div>
+                <div class="sidebar-subtitle">按照步骤完成您的论文</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="step-card active" data-step="1" onclick="switchStep(1)">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">输入文章题目</div>
+                </div>
+                <div class="step-desc">生成千字大纲</div>
+                <div class="step-status">
+                    <i class="fas fa-clock"></i>
+                    进行中
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-card" data-step="2" onclick="switchStep(2)">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">编辑大纲</div>
+                </div>
+                <div class="step-desc">生成文章初稿</div>
+                <div class="step-status">
+                    <i class="fas fa-lock"></i>
+                    未开始
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-card" data-step="3" onclick="switchStep(3)">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">下载文章</div>
+                </div>
+                <div class="step-desc">毕业设计、答辩PPT</div>
+                <div class="step-status">
+                    <i class="fas fa-lock"></i>
+                    未开始
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="quick-actions">
+                    <button class="quick-btn">
+                        <i class="fas fa-save"></i>
+                        保存草稿
+                    </button>
+                    <button class="quick-btn">
+                        <i class="fas fa-history"></i>
+                        历史记录
+                    </button>
+                    <button class="quick-btn">
+                        <i class="fas fa-cog"></i>
+                        写作设置
+                    </button>
+                    <button class="quick-btn">
+                        <i class="fas fa-question-circle"></i>
+                        使用帮助
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Step 1 Content -->
+            <div class="step-content" id="step1" style="display: block;">
+                <div class="content-header">
+                    <h1 class="content-title">输入文章题目</h1>
+                    <p class="content-subtitle">填写论文基本信息，AI将为您生成专业大纲</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-cog"></i>
+                            论文参数设置
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Paper Type -->
+                        <div class="form-group" style="margin-bottom: 24px;">
+                            <label class="form-label">论文类型 <span class="required">*</span></label>
+                            <div class="type-grid">
+                                <div class="type-item active" onclick="selectType(this)">
+                                    <div class="type-icon" style="background: var(--primary); color: white;">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <div class="type-name">论文助手</div>
+                                </div>
+                                <div class="type-item" onclick="selectType(this)">
+                                    <div class="type-icon" style="background: #27ae60; color: white;">
+                                        <i class="fas fa-book"></i>
+                                    </div>
+                                    <div class="type-name">期末范文</div>
+                                </div>
+                                <div class="type-item" onclick="selectType(this)">
+                                    <div class="type-icon" style="background: #8e44ad; color: white;">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    <div class="type-name">课程范文</div>
+                                </div>
+                                <div class="type-item" onclick="selectType(this)">
+                                    <div class="type-icon" style="background: #2980b9; color: white;">
+                                        <i class="fas fa-briefcase"></i>
+                                    </div>
+                                    <div class="type-name">职称文章</div>
+                                </div>
+                                <div class="type-item" onclick="selectType(this)">
+                                    <div class="type-icon" style="background: #e67e22; color: white;">
+                                        <i class="fas fa-newspaper"></i>
+                                    </div>
+                                    <div class="type-name">期刊文章</div>
+                                </div>
+                                <div class="type-item" onclick="selectType(this)">
+                                    <div class="type-icon" style="background: #f39c12; color: white;">
+                                        <i class="fas fa-clipboard-list"></i>
+                                    </div>
+                                    <div class="type-name">开题报告</div>
+                                </div>
+                                <div class="type-item" onclick="selectType(this)">
+                                    <div class="type-icon" style="background: #1abc9c; color: white;">
+                                        <i class="fas fa-book-open"></i>
+                                    </div>
+                                    <div class="type-name">文献综述</div>
+                                </div>
+                                <div class="type-item" onclick="selectType(this)">
+                                    <div class="type-icon" style="background: #e74c3c; color: white;">
+                                        <i class="fas fa-presentation"></i>
+                                    </div>
+                                    <div class="type-name">答辩PPT</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Grid -->
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">专业/学科 <span class="required">*</span></label>
+                                <select class="form-select">
+                                    <option>请选择专业</option>
+                                    <option>计算机科学与技术</option>
+                                    <option>人工智能</option>
+                                    <option>临床医学</option>
+                                    <option>法学</option>
+                                    <option>经济学</option>
+                                    <option>教育学</option>
+                                    <option>管理学</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">论文题目 <span class="required">*</span></label>
+                                <input type="text" class="form-input" placeholder="请输入完整的论文题目（至少5个字）" id="paperTitle">
+                            </div>
+                        </div>
+
+                        <!-- Education Level -->
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label class="form-label">学历层次 <span class="required">*</span></label>
+                            <div class="radio-group">
+                                <label class="radio-item">
+                                    <input type="radio" name="education" value="专科">
+                                    <span>专科</span>
+                                </label>
+                                <label class="radio-item active">
+                                    <input type="radio" name="education" value="本科" checked>
+                                    <span>本科</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="education" value="研究生">
+                                    <span>研究生</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="education" value="博士">
+                                    <span>博士</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Outline Level -->
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label class="form-label">大纲详细程度 <span class="required">*</span></label>
+                            <div class="radio-group">
+                                <label class="radio-item active">
+                                    <input type="radio" name="outline" value="2" checked>
+                                    <span>二级大纲</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="outline" value="3">
+                                    <span>三级大纲（更详细）</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Word Count -->
+                        <div class="form-group">
+                            <label class="form-label">预期字数 <span class="required">*</span></label>
+                            <div class="radio-group">
+                                <label class="radio-item">
+                                    <input type="radio" name="wordcount" value="8000">
+                                    <span>约8000字</span>
+                                </label>
+                                <label class="radio-item active">
+                                    <input type="radio" name="wordcount" value="20000" checked>
+                                    <span>约20000字</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="wordcount" value="30000">
+                                    <span>约30000字</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="wordcount" value="50000">
+                                    <span>约50000字</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-bar">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-save"></i>
+                            保存草稿
+                        </button>
+                        <button class="btn btn-primary btn-large" onclick="generateOutline()">
+                            <i class="fas fa-magic"></i>
+                            免费生成大纲
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 Content -->
+            <div class="step-content" id="step2" style="display: none;">
+                <div class="content-header">
+                    <h1 class="content-title">编辑大纲</h1>
+                    <p class="content-subtitle">查看和修改AI生成的大纲，确认后生成全文</p>
+                </div>
+
+                <div class="card">
+                    <div class="editor-header">
+                        <div>
+                            <div class="editor-title">人工智能在医学领域的应用研究</div>
+                            <div class="editor-meta">
+                                <i class="far fa-clock"></i> 创建于 2026-09-01 21:31:12 
+                                <span style="margin: 0 8px;">|</span>
+                                <i class="far fa-user"></i> 本科毕业设计
+                            </div>
+                        </div>
+                        <div class="editor-actions">
+                            <button class="btn btn-secondary" onclick="resetEditor()">
+                                <i class="fas fa-undo"></i>
+                                重置
+                            </button>
+                            <button class="btn btn-primary" onclick="exportDoc()">
+                                <i class="fas fa-download"></i>
+                                导出
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="editor-wrapper">
+                        <textarea id="editor">
+<h2>摘要</h2>
+<p>随着人工智能技术的快速发展，其在医学领域的应用日益广泛。本文系统研究了人工智能在医学影像诊断、疾病预测、药物研发和个性化治疗等方面的应用现状与发展趋势。通过分析国内外相关文献和实际案例，探讨了AI技术对现代医疗体系带来的深刻变革，并指出了当前面临的挑战与未来发展方向。</p>
+
+<h2>第一章 绪论</h2>
+<h3>1.1 研究背景与意义</h3>
+<p>人工智能作为新一轮科技革命和产业变革的核心驱动力，正在深刻改变着人类社会的生产生活方式。在医疗健康领域，AI技术的应用对于提高诊疗效率、优化医疗资源配置、降低医疗成本具有重要意义。</p>
+
+<h3>1.2 国内外研究现状</h3>
+<p>目前，国际上在医学AI领域已取得显著进展。IBM Watson、Google DeepMind等公司在疾病诊断、药物发现等方面取得了突破性成果。国内方面，腾讯觅影、阿里健康等企业也在医学影像分析、智能问诊等领域取得了重要进展。</p>
+
+<h3>1.3 研究内容与方法</h3>
+<p>本研究采用文献研究法、案例分析法和比较研究法，系统梳理AI在医学领域的应用场景，分析技术实现路径，评估应用效果，并提出优化建议。</p>
+
+<h2>第二章 人工智能技术概述</h2>
+<h3>2.1 机器学习算法</h3>
+<ul>
+    <li><strong>监督学习：</strong>包括支持向量机（SVM）、随机森林、神经网络等，广泛应用于疾病分类和预测</li>
+    <li><strong>深度学习：</strong>卷积神经网络（CNN）在医学影像识别中表现出色，循环神经网络（RNN）适用于时序数据分析</li>
+    <li><strong>强化学习：</strong>在治疗方案优化和个性化医疗决策中发挥作用</li>
+</ul>
+
+<h3>2.2 自然语言处理技术</h3>
+<p>NLP技术在电子病历分析、医学文献挖掘、智能问诊系统等方面具有重要应用价值。通过文本分类、实体识别、关系抽取等技术，可以从海量医学文本中提取有价值的信息。</p>
+
+<h2>第三章 人工智能在医学影像诊断中的应用</h2>
+<h3>3.1 肺部CT影像分析</h3>
+<p>AI系统在肺结节检测、肺癌筛查方面已达到甚至超越人类专家水平。通过深度学习算法，可以快速准确地识别微小病灶，为早期诊断提供重要支持。</p>
+
+<h3>3.2 眼底图像识别</h3>
+<p>糖尿病视网膜病变、青光眼等眼底疾病的AI辅助诊断系统已在临床广泛应用，实现了大规模筛查和早期干预。</p>
+
+<h2>第四章 挑战与展望</h2>
+<h3>4.1 面临的主要挑战</h3>
+<ol>
+    <li><strong>数据质量与隐私保护：</strong>医学数据标准化程度低，隐私保护要求高</li>
+    <li><strong>算法可解释性：</strong>深度学习模型的"黑箱"特性影响临床信任度</li>
+    <li><strong>伦理法律问题：</strong>AI医疗决策的责任归属尚不明确</li>
+</ol>
+
+<h3>4.2 未来发展方向</h3>
+<p>未来医学AI将向多模态融合、可解释AI、联邦学习、人机协同等方向发展。随着技术的不断成熟和监管政策的完善，AI将在精准医疗、智慧医院建设等方面发挥更大作用。</p>
+
+<h2>结论</h2>
+<p>人工智能正在深刻改变医学实践模式，为医疗健康事业带来前所未有的机遇。然而，技术落地仍面临诸多挑战，需要政府、医疗机构、科技企业和学术界共同努力，推动医学AI健康有序发展，最终造福广大患者。</p>
+
+<h2>参考文献</h2>
+<p>[1] Topol E J. High-performance medicine: the convergence of human and artificial intelligence[J]. Nature Medicine, 2019, 25(1): 44-56.</p>
+<p>[2] 陈静, 王明. 人工智能在医学影像诊断中的应用进展[J]. 中国医学影像技术, 2020, 36(5): 641-645.</p>
+<p>[3] Rajkomar A, Dean J, Kohane I. Machine learning in medicine[J]. New England Journal of Medicine, 2019, 381(14): 1347-1358.</p>
+                        </textarea>
+                    </div>
+
+                    <div class="editor-footer">
+                        <div class="editor-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-font"></i>
+                                <span>字数:</span>
+                                <span class="stat-value" id="wordCount">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-character"></i>
+                                <span>字符数:</span>
+                                <span class="stat-value" id="charCount">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="far fa-clock"></i>
+                                <span>最后保存:</span>
+                                <span class="stat-value" id="lastSave">刚刚</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-bar">
+                        <button class="btn btn-secondary" onclick="switchStep(1)">
+                            <i class="fas fa-arrow-left"></i>
+                            返回上一步
+                        </button>
+                        <button class="btn btn-primary" onclick="generateFullText()">
+                            <i class="fas fa-magic"></i>
+                            生成全文
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 Content -->
+            <div class="step-content" id="step3" style="display: none;">
+                <div class="content-header">
+                    <h1 class="content-title">下载文章</h1>
+                    <p class="content-subtitle">查看生成状态，下载完整论文及相关资料</p>
+                </div>
+
+                <div class="article-card">
+                    <div class="article-header">
+                        <div class="article-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <div class="article-title">人工智能在医学领域的应用研究</div>
+                            <div style="margin-top: 4px;">
+                                <span class="article-tag">本科毕业设计</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="article-meta">
+                        <i class="far fa-clock"></i> 创建于 2026-09-01 21:31:12
+                    </div>
+
+                    <div class="status-list">
+                        <div class="status-item">
+                            <div class="status-label">
+                                <i class="fas fa-file-alt" style="color: var(--primary);"></i>
+                                正文内容
+                            </div>
+                            <span class="status-badge completed">
+                                <i class="fas fa-check"></i>
+                                已完成
+                            </span>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">
+                                <i class="fas fa-sitemap" style="color: var(--primary);"></i>
+                                文章结构
+                            </div>
+                            <span class="status-badge completed">
+                                <i class="fas fa-check"></i>
+                                已完成
+                            </span>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">
+                                <i class="fas fa-book" style="color: var(--primary);"></i>
+                                参考文献
+                            </div>
+                            <span class="status-badge completed">
+                                <i class="fas fa-check"></i>
+                                已完成
+                            </span>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">
+                                <i class="fas fa-presentation" style="color: var(--primary);"></i>
+                                答辩PPT
+                            </div>
+                            <span class="status-badge pending">
+                                <i class="fas fa-clock"></i>
+                                待生成
+                            </span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-large btn-block" style="margin-bottom: 12px;">
+                        <i class="fas fa-download"></i>
+                        下载完整论文 (Word格式)
+                    </button>
+                    <button class="btn btn-secondary btn-large btn-block">
+                        <i class="fas fa-eye"></i>
+                        预览论文
+                    </button>
+                </div>
+
+                <div class="promo-section">
+                    <div class="promo-banner orange">
+                        <i class="fas fa-gift"></i>
+                        <strong>点击获得</strong> 毕业设计全套大礼包 &gt;&gt;
+                    </div>
+                    <div class="promo-banner yellow">
+                        <i class="fas fa-fire"></i>
+                        <strong>点击获得</strong> PPT+自述稿+问题预测 答辩一次过
+                    </div>
+                    <div class="promo-banner blue">
+                        <i class="fas fa-code"></i>
+                        <strong>批量采购、定制专属API</strong>、更多合作.... 点击详细了解 &gt;&gt;
+                    </div>
+                    <div class="promo-banner teal">
+                        <i class="fas fa-shield-alt"></i>
+                        <strong>强力降低AIGC痕迹</strong>，轻松过知W超严AI痕迹检测（2.13版）立即降AIGC痕迹 &gt;&gt;
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Toggle -->
+    <button class="mobile-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Floating Toolbar -->
+    <div class="floating-toolbar">
+        <div class="float-btn">
+            <i class="fas fa-gift"></i>
+            <span>免单</span>
+        </div>
+        <div class="float-btn" style="background: var(--warning);">
+            <i class="fas fa-graduation-cap"></i>
+            <span>毕业</span>
+        </div>
+        <div class="float-btn">
+            <i class="fas fa-headset"></i>
+            <span>客服</span>
+        </div>
+        <div class="float-btn">
+            <i class="fas fa-box"></i>
+            <span>批量</span>
+        </div>
+    </div>
+
+    <script>
+        // CKEditor Instance
+        let editorInstance;
+
+        // Initialize CKEditor
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                toolbar: [
+                    'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|',
+                    'blockQuote', 'insertTable', '|', 'undo', 'redo'
+                ],
+                heading: {
+                    options: [
+                        { model: 'paragraph', title: '段落', class: 'ck-heading_paragraph' },
+                        { model: 'heading1', view: 'h1', title: '标题1', class: 'ck-heading_heading1' },
+                        { model: 'heading2', view: 'h2', title: '标题2', class: 'ck-heading_heading2' },
+                        { model: 'heading3', view: 'h3', title: '标题3', class: 'ck-heading_heading3' }
+                    ]
+                },
+                table: {
+                    contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+                }
+            })
+            .then(editor => {
+                editorInstance = editor;
+                
+                editor.model.document.on('change:data', () => {
+                    updateStats();
+                });
+                
+                updateStats();
+            })
+            .catch(error => {
+                console.error('CKEditor initialization failed:', error);
+            });
+
+        // Update Statistics
+        function updateStats() {
+            if (!editorInstance) return;
+            
+            const data = editorInstance.getData();
+            const text = data.replace(/<[^>]*>/g, '');
+            const wordCount = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+            const charCount = text.length;
+            
+            document.getElementById('wordCount').textContent = wordCount.toLocaleString();
+            document.getElementById('charCount').textContent = charCount.toLocaleString();
+            document.getElementById('lastSave').textContent = '刚刚';
+        }
+
+        // Switch Step
+        function switchStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.step-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            // Show selected step
+            document.getElementById(`step${step}`).style.display = 'block';
+            
+            // Update step cards
+            document.querySelectorAll('.step-card').forEach((card, index) => {
+                card.classList.remove('active', 'completed');
+                
+                if (index + 1 === step) {
+                    card.classList.add('active');
+                } else if (index + 1 < step) {
+                    card.classList.add('completed');
+                }
+            });
+            
+            // Update progress bar
+            const progress = (step / 3) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 1024) {
+                toggleSidebar();
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Select Paper Type
+        function selectType(element) {
+            document.querySelectorAll('.type-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // Generate Outline
+        function generateOutline() {
+            const title = document.getElementById('paperTitle').value;
+            
+            if (!title || title.length < 5) {
+                alert('请输入完整的论文题目（至少5个字）');
+                document.getElementById('paperTitle').focus();
+                return;
+            }
+            
+            // Simulate generation
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                switchStep(2);
+                alert('大纲生成成功！请在编辑器中查看和修改。');
+            }, 2000);
+        }
+
+        // Reset Editor
+        function resetEditor() {
+            if (confirm('确定要重置编辑器内容吗？这将清除所有修改。')) {
+                if (editorInstance) {
+                    const defaultContent = document.querySelector('#editor').value;
+                    editorInstance.setData(defaultContent);
+                }
+            }
+        }
+
+        // Export Document
+        function exportDoc() {
+            if (!editorInstance) return;
+            
+            const content = editorInstance.getData();
+            const blob = new Blob([content], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '论文大纲.html';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert('文档已导出！');
+        }
+
+        // Generate Full Text
+        function generateFullText() {
+            if (!editorInstance) return;
+            
+            const content = editorInstance.getData();
+            if (content.length < 100) {
+                alert('内容过短，请完善大纲后再继续。');
+                return;
+            }
+            
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                switchStep(3);
+                alert('全文生成成功！请查看和下载。');
+            }, 3000);
+        }
+
+        // Toggle Sidebar (Mobile)
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        // Radio Button Styling
+        document.querySelectorAll('.radio-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const groupName = this.querySelector('input[type="radio"]').name;
+                document.querySelectorAll(`.radio-item input[name="${groupName}"]`).forEach(radio => {
+                    radio.closest('.radio-item').classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+
+        // Auto-save simulation
+        setInterval(() => {
+            if (editorInstance) {
+                const content = editorInstance.getData();
+                localStorage.setItem('paper_draft', content);
+                document.getElementById('lastSave').textContent = '刚刚';
+            }
+        }, 30000);
+
+        // Load draft on page load
+        window.addEventListener('load', () => {
+            const draft = localStorage.getItem('paper_draft');
+            if (draft && editorInstance) {
+                editorInstance.setData(draft);
+            }
+        });
+    </script>
+</body>
+</html>
