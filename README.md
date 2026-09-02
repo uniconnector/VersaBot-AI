@@ -4,7 +4,7 @@
 
 ![Logo](https://img.shields.io/badge/文达AI-科研助手-0d5c63?style=for-the-badge)
 
-** 3分钟轻松搞定一篇高质量文章 | AI驱动 · 学术规范 · 智能生成**
+** 3分钟轻松搞定一篇高质量文章 | AI驱动 · 科研规范 · 智能生成**
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/Version-1.0.0-green.svg)]()
@@ -277,9 +277,9 @@ copies of the Software...
 
 ## 👥 团队介绍
 
-**文达AI团队** - 致力于用人工智能技术提升学术写作效率
+**文达AI团队** - 致力于用人工智能技术提升科研写作效率
 
-- 💼 产品方向：学术写作工具、AI辅助创作
+- 💼 产品方向：科研写作工具、AI辅助创作
 - 🎯 使命：让每个人都能高效完成高质量科研
 -  愿景：成为最受信赖的智能写作平台
 
