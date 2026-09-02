@@ -99,7 +99,7 @@
 ## 📦 项目结构
 
 ```
-biling-ai-paper/
+versabot-ai-paper/
 ├── index.html              # 主页面
 ├── css/
 │   └── style.css          # 样式文件
@@ -289,7 +289,7 @@ copies of the Software...
 
 - 📧 邮箱：support@versabot.cn
 - 💬 微信群：扫描二维码加入用户群
-- 🐦 Twitter：[@BilingAI](#)
+- 🐦 Twitter：[@VersaBotAI](#)
 -  GitHub Issues：[提交问题](https://github.com/your-repo/issues)
 
 ---
