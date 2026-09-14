@@ -11,7 +11,7 @@ Open-source UI and infrastructure for AI-powered academic research tools.
 [![Version](https://img.shields.io/badge/Version-1.0.0-green.svg)]()
 [![CKEditor](https://img.shields.io/badge/Editor-CKEditor5-orange.svg)]()
 
-[在线演示](https://www.versabot.cn/ui/index.html) · [使用文档](#) · [API文档](#) · [更新日志](#)
+[在线演示](https://www.versabot.cn/ui/index.html) · [使用文档](https://www.versabot.cn/ui/index.html) · [API文档](https://www.versabot.cn/ui/index.html) · [更新日志](https://www.versabot.cn/ui/index.html)
 
 </div>
 
