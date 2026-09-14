@@ -3,6 +3,8 @@
 > **面向 AI 学术科研工具的开源 UI 与应用基础设施**
 > **Open-source UI and infrastructure for AI-powered academic research tools.**
 
+![项目首页](./scrrenshots/step1-input.png)
+
 VersaBot-AI 致力于提供一个开放、可扩展的基础，用于构建下一代 AI 学术科研应用。
 
 VersaBot-AI aims to provide an open and extensible foundation for building the next generation of AI-powered academic research applications.
