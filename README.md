@@ -291,7 +291,7 @@ copies of the Software...
 - 📧 邮箱：support@versabot.cn
 - 💬 微信群：扫描二维码加入用户群
 - 🐦 Twitter：[@VersaBotAI](#)
--  GitHub Issues：[提交问题](https://github.com/your-repo/issues)
+-  GitHub Issues：[提交问题](https://github.com/uniconnector/VersaBot-AI/issues)
 
 ---
 
