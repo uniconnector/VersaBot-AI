@@ -1,4 +1,5 @@
-# 文达AI科研助手 - 智能科研写作平台 - 前端UI
+# VersaBot-AI：一个面向 AI 学术科研工具的开源 UI 与应用基础设施
+Open-source UI and infrastructure for AI-powered academic research tools.
 
 <div align="center">
 
