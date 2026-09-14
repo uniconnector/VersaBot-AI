@@ -217,23 +217,48 @@ Export
 
 # 🖼️ Screenshots
 
-### Research Workspace
+### **步骤一：输入文章题目**
 
-![Research Workspace](./screenshots/research-workspace.png)
+填写科研基本信息，包括科研类型、专业学科、科研题目、学历层次、大纲详细程度和预期字数等参数。
 
-### Academic Writing
+![步骤1截图](./scrrenshots/step1-input.png)
 
-![Academic Writing](./screenshots/academic-writing.png)
+**功能特点：**
+- 📝 8种科研类型选择（科研助手、期末范文、课程范文等）
+- 🎓 4个学历层次（专科、本科、研究生、博士）
+- 📏 灵活的字数设置（8000-50000字）
+- 🎯 二级/三级大纲选择
 
-### AI Outline
+---
 
-![AI Outline](./screenshots/ai-outline.png)
+### **步骤二：编辑大纲**
 
-### Mobile
+查看和修改AI生成的科研大纲，使用CKEditor 5富文本编辑器进行精细化编辑。
 
-![Mobile](./screenshots/mobile.png)
+![步骤2截图](./scrrenshots/step2-editor.png)
 
-> 如果暂时没有这些截图，可以先保留现有 screenshots，并随着版本迭代逐步替换。
+**功能特点：**
+- ✨ 智能生成完整科研大纲结构
+-  富文本编辑（标题、粗体、列表、表格等）
+- 📊 实时字数和字符数统计
+-  自动保存草稿功能
+-  支持导出HTML格式
+-  一键重置内容
+
+---
+
+### **步骤三：下载文章**
+
+查看生成状态，下载完整科研及相关资料（Word、PDF、PPT等格式）。
+
+![步骤3截图](./scrrenshots/step3-download.png)
+
+**功能特点：**
+- ✅ 实时显示各部分完成状态
+- 📥 多格式下载支持（Word、PDF）
+-  毕业设计全套大礼包
+-  答辩PPT自动生成
+-  AIGC痕迹降低工具
 
 ---
 
